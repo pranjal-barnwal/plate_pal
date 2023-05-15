@@ -17,9 +17,9 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  int _currentIndex = 1;
+  int _currentIndex = 0;
 
-  final List<Widget> _children = [ HomeScreen(), FiltersScreen(), BookmarksScreen(), ProfileScreen()];
+  final List<Widget> _children = [ const HomeScreen(), const FiltersScreen(), const BookmarksScreen(), const ProfileScreen()];
 
   void onTabTapped(int index) {
     setState(() {
@@ -33,6 +33,7 @@ class _MyAppState extends State<MyApp> {
       debugShowCheckedModeBanner: false,
       title: 'Splitted Widgets',
       theme: ThemeData(
+        fontFamily: 'Poppins',
         primarySwatch: Colors.red,
         textTheme: TextTheme(
           displayLarge: TextStyle(
@@ -48,40 +49,44 @@ class _MyAppState extends State<MyApp> {
         ),
       ),
 
-      home: Scaffold(
-        appBar: AppBar(
-          //:?    Making StatusBar Transparent
-          systemOverlayStyle:
-              const SystemUiOverlayStyle(statusBarColor: Colors.transparent),
-          toolbarHeight: 4,
-        ),
-        
-        body: _children[_currentIndex],
-        
-        bottomNavigationBar: BottomNavigationBar(
-          currentIndex: _currentIndex,
-          onTap: onTabTapped,
-          items: const [
-            BottomNavigationBarItem(
-              icon: Icon(Icons.window),
-              label: 'Home',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.filter),
-              label: 'Filter',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.bookmark),
-              label: 'Bookmark',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.person),
-              label: 'Profile',
-            ),
-          ],
+      home: AnnotatedRegion<SystemUiOverlayStyle>(
+        value: SystemUiOverlayStyle.dark,   //? to make status-bar icons dark 
+        child: Scaffold(
+          // appBar: AppBar(
+          //   //:?    Making StatusBar Transparent
+          //   systemOverlayStyle:
+          //       const SystemUiOverlayStyle(statusBarColor: Colors.transparent),
+          //   toolbarHeight: 4,
+          // ),
+          
+          body: _children[_currentIndex],
+          
+          bottomNavigationBar: BottomNavigationBar(
+            currentIndex: _currentIndex,
+            onTap: onTabTapped,
+            items: [
+              const BottomNavigationBarItem(
+                icon: Icon(Icons.window),
+                label: 'Home',
+              ),
+              const BottomNavigationBarItem(
+                icon: Icon(Icons.filter),
+                label: 'Filter',
+              ),
+              const BottomNavigationBarItem(
+                icon: Icon(Icons.bookmark),
+                label: 'Bookmark',
+              ),
+              // const BottomNavigationBarItem(
+              //   icon: Icon(Icons.person),
+              //   label: 'Person',
+              // ),
+            ],
+          ),
         ),
       ),
 
+      
     );
   }
 }
