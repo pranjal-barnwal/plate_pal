@@ -4,9 +4,10 @@ import 'package:http/http.dart' as http;
 import 'package:plate_pal/providers/restaurant.dart';
 
 class RestaurantsProvider with ChangeNotifier{
-  List<Map<String, String>> items = [];
+  List<Map<String, dynamic>> items = [];
 
-  void fetchRestros(){
+  void fetchRestros(List<Map<String, dynamic>> newItems){
+    items = newItems;
     notifyListeners();
   }
 

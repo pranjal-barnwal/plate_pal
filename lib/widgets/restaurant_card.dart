@@ -14,16 +14,7 @@ import 'package:flutter/material.dart';
 */
 
 class RestaurantCard extends StatelessWidget {
-  var restroData = {
-    "id": "5",
-    "name": "Kake Da Hotel",
-    "tags": "Chicken, Naan",
-    "rating": "4.9",
-    "discount": "20",
-    "primary_image":
-        "https://theoptimiz.com/restro/public/Resturants/kake-da-hotel.png",
-    "distance": "3174.53"
-  };
+  Map<String, dynamic> restroData;
   late List<String> tagsList;
 
   RestaurantCard({super.key, required this.restroData});

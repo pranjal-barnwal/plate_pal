@@ -8,17 +8,25 @@ import 'package:provider/provider.dart';
 
 import '../providers/location.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   HomeScreen({super.key});
 
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
   var categoriesList = ["All", "Pizza", "Chicken", "Salad", "Burger"];
+
   var activeCategory = "Pizza";
 
   @override
   Widget build(BuildContext context) {
     return Consumer2<RestaurantsProvider, LocationProvider>(
       builder: (context, restrosProviderModel, locationProviderModel, child) {
-      locationProviderModel.fetchLocation();
+      // locationProviderModel.fetchLocation();
+      print("************* ITEM: 0 *************");
+      print(restrosProviderModel.items);
         
       return Container(
         padding: const EdgeInsets.fromLTRB(20, 50, 20, 0),
@@ -126,7 +134,7 @@ class HomeScreen extends StatelessWidget {
                   itemBuilder: (ctx, ind) =>
                       (ind + 1 != restrosProviderModel.items.length)
                           ? RestaurantCard(
-                              restroData: restrosProviderModel.items[ind],
+                              restroData: restrosProviderModel.items[ind].map((key, value) => MapEntry(key, value.toString())),
                             )
                           : Padding(
                               padding: EdgeInsets.only(bottom: 60),

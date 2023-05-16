@@ -21,7 +21,8 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
 
-    Timer(const Duration(seconds: 2), () {
+    Timer(const Duration(seconds: 4), () {
+      print("TIMED NAVIGATION Instantiated");
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => CompleteLayout()),
@@ -52,16 +53,21 @@ class _SplashScreenState extends State<SplashScreen> {
           // print(jsonData);
 
           if(jsonData['status'] == 'SUCCESS') {
-            // List<dynamic> data = jsonData['data'].values.toList();
-            List<Map<String, String>> convertedData = jsonData.map((map) {
-              return map.map((key, value) => MapEntry(key, value.toString()));
-            }).toList();
+            print(jsonData['data']);
+            // List<dynamic> convertedData = jsonData['data'].values.toList();
+            // List<Map<String, String>> convertedData = jsonData.map((map) {
+            //   return map.map((key, value) => MapEntry(key, value.toString()));
+            // }).toList();
             
-            restrosProviderModel.items = convertedData;
-            restrosProviderModel.fetchRestros();
+            restrosProviderModel.items = jsonData['data'];
+            restrosProviderModel.fetchRestros(jsonData['data']);
             setState(() {});
             // print("DATA:");
-            // print(jsonData['data']);
+            // print(restrosProviderModel.items);
+            // Navigator.pushReplacement(
+            //   context,
+            //   MaterialPageRoute(builder: (context) => CompleteLayout()),
+            // );
           } else {
             throw Exception('Failed to fetch restaurants');
           }
