@@ -26,7 +26,7 @@ class RestaurantCard extends StatelessWidget {
   };
   late List<String> tagsList;
 
-  RestaurantCard({super.key});
+  RestaurantCard({super.key, required this.restroData});
 
   createTagsList(){
     tagsList = restroData['tags']!.split(", ");

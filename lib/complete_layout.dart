@@ -87,7 +87,7 @@ class _CompleteLayoutState extends State<CompleteLayout> {
               ),
               const BottomNavigationBarItem(
                 icon: Icon(Icons.person),
-                label: 'Person',
+                label: 'Profile',
               ),
             ],
           ),
