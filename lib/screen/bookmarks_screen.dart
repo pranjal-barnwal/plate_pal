@@ -6,9 +6,11 @@ class BookmarksScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: double.infinity,
-      child: Text("Bookmarks Screen"), 
+    return Center(
+      child: Text(
+        'Bookmarks Screen',
+        style: TextStyle(fontSize: 24),
+      ),
     );
   }
 }

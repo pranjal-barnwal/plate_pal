@@ -8,7 +8,7 @@ class FiltersScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: Text(
-        'Filters Page',
+        'Filters Screen',
         style: TextStyle(fontSize: 24),
       ),
     );

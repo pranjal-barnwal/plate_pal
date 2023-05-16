@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'screen/bookmarks_screen.dart';
-import 'screen/filters_screen.dart';
-import 'screen/profile_screen.dart';
-import 'screen/home_screen.dart';
+import 'package:plate_pal/screen/splash_screen.dart';
 
 void main() {
+  SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(statusBarColor: Colors.transparent));
   runApp(const MyApp());
 }
 
@@ -17,15 +15,7 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  int _currentIndex = 0;
 
-  final List<Widget> _children = [ const HomeScreen(), const FiltersScreen(), const BookmarksScreen(), const ProfileScreen()];
-
-  void onTabTapped(int index) {
-    setState(() {
-      _currentIndex = index;
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -49,42 +39,7 @@ class _MyAppState extends State<MyApp> {
         ),
       ),
 
-      home: AnnotatedRegion<SystemUiOverlayStyle>(
-        value: SystemUiOverlayStyle.dark,   //? to make status-bar icons dark 
-        child: Scaffold(
-          // appBar: AppBar(
-          //   //:?    Making StatusBar Transparent
-          //   systemOverlayStyle:
-          //       const SystemUiOverlayStyle(statusBarColor: Colors.transparent),
-          //   toolbarHeight: 4,
-          // ),
-          
-          body: _children[_currentIndex],
-          
-          bottomNavigationBar: BottomNavigationBar(
-            currentIndex: _currentIndex,
-            onTap: onTabTapped,
-            items: [
-              const BottomNavigationBarItem(
-                icon: Icon(Icons.window),
-                label: 'Home',
-              ),
-              const BottomNavigationBarItem(
-                icon: Icon(Icons.filter),
-                label: 'Filter',
-              ),
-              const BottomNavigationBarItem(
-                icon: Icon(Icons.bookmark),
-                label: 'Bookmark',
-              ),
-              // const BottomNavigationBarItem(
-              //   icon: Icon(Icons.person),
-              //   label: 'Person',
-              // ),
-            ],
-          ),
-        ),
-      ),
+      home: SplashScreen(),
 
       
     );
