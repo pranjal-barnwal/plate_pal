@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:plate_pal/complete_layout.dart';
 import 'package:provider/provider.dart';
+import 'package:http/http.dart' as http;
 
 import '../providers/location.dart';
 import '../providers/restaurants.dart';
@@ -31,31 +32,46 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Consumer2<RestaurantsProvider, LocationProvider>(
-      builder: (context, restrosProviderModel, locationProviderModel, child) {
+        builder: (context, restrosProviderModel, locationProviderModel, child) {
       // Call the async functions one after another using Future.then
       Future<void> fetchRestaurants(double lat, double lng) async {
-    final url = Uri.parse('https://theoptimiz.com/restro/public/api/get_resturants');
-    final body = json.encode({
-      'lat': lat,
-      'lng': lng,
-    });
-    final response = await http.post(url, body: body, headers: {'Content-Type': 'application/json'});
-    
-    if (response.statusCode == 200) {
-      final data = json.decode(response.body);
-      
-      if (data['status'] == 'SUCCESS') {
-        final List<dynamic> jsonData = data['data'];
-        restaurants = jsonData.map((json) => Restaurant.fromJson(json)).toList();
-        notifyListeners();
-      } else {
-        throw Exception('Failed to fetch restaurants');
+        locationProviderModel.fetchLocation();
+        
+        final url = Uri.parse(
+            'https://theoptimiz.com/restro/public/api/get_resturants');
+        final body = json.encode({
+          'lat': locationProviderModel.latitude,
+          'lng': locationProviderModel.longitude,
+        });
+        final response = await http.post(url,
+            body: body, headers: {'Content-Type': 'application/json'});
+
+        if (response.statusCode == 200) {
+          final jsonData = json.decode(response.body);
+          // print("JSONDATA:");
+          // print(jsonData);
+
+          if(jsonData['status'] == 'SUCCESS') {
+            // List<dynamic> data = jsonData['data'].values.toList();
+            List<Map<String, String>> convertedData = jsonData.map((map) {
+              return map.map((key, value) => MapEntry(key, value.toString()));
+            }).toList();
+            
+            restrosProviderModel.items = convertedData;
+            restrosProviderModel.fetchRestros();
+            setState(() {});
+            // print("DATA:");
+            // print(jsonData['data']);
+          } else {
+            throw Exception('Failed to fetch restaurants');
+          }
+        } else {
+          throw Exception('Failed to connect to the API');
+        }
       }
-    } else {
-      throw Exception('Failed to connect to the API');
-    }
-  }
-      
+
+      fetchRestaurants(locationProviderModel.latitude, locationProviderModel.longitude);
+
       return Scaffold(
         body: Container(
           height: double.infinity,
