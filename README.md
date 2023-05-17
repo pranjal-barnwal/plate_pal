@@ -1,8 +1,6 @@
 # **Plate Pal**
 
-<div align="center">
-    <img alt="Demo" src="./public/mockup.png" />
-</div>
+![mockup](https://github.com/pranjal-barnwal/plate_pal/assets/71400605/14c0dc23-9a7b-44e3-b9f9-b77abe11bd1a)
 
 <div align="center">
 
@@ -41,10 +39,6 @@
 
 
 ## Libraries Used
-- **Material Library:** Consists of commonly used Material Widgets
-- **Google Fonts:** Collection of Free & Open-Source fonts
-- **Image Downloader:** Downloads images and movies and saves to Photo Library
-
 - **provider:** state management package that allows you to easily manage and share state
 - **http:** provides convenient methods for making HTTP requests
 - **geolocator:** package that provides geolocation services in Flutter
