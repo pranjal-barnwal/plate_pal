@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:plate_pal/providers/restaurants.dart';
@@ -5,6 +7,9 @@ import 'package:plate_pal/widgets/category_chip.dart';
 import 'package:plate_pal/widgets/restaurant_card.dart';
 import 'package:plate_pal/widgets/story_card.dart';
 import 'package:provider/provider.dart';
+import 'package:http/http.dart' as http;
+
+import 'package:geolocator/geolocator.dart';
 
 import '../providers/location.dart';
 
@@ -17,16 +22,66 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   var categoriesList = ["All", "Pizza", "Chicken", "Salad", "Burger"];
+  var searchController = TextEditingController();
 
-  var activeCategory = "Pizza";
 
   @override
   Widget build(BuildContext context) {
     return Consumer2<RestaurantsProvider, LocationProvider>(
       builder: (context, restrosProviderModel, locationProviderModel, child) {
-      // locationProviderModel.fetchLocation();
-      print("************* ITEM: 0 *************");
-      print(restrosProviderModel.items);
+      // print("************* ITEMS:  *************");
+      // print(restrosProviderModel.items);
+
+
+
+      Future<void> fetchRestaurants(double lat, double lng) async {
+        final url = Uri.parse(
+            'https://theoptimiz.com/restro/public/api/get_resturants');
+        final body = json.encode({
+          'lat': locationProviderModel.latitude,
+          'lng': locationProviderModel.longitude,
+        });
+        final response = await http.post(url,
+            body: body, headers: {'Content-Type': 'application/json'});
+
+        if (response.statusCode == 200) {
+          final jsonData = json.decode(response.body);
+          // print("JSONDATA:");
+          // print(jsonData);
+
+          if(jsonData['status'] == 'SUCCESS') {
+            restrosProviderModel.items = jsonData['data'].cast<Map<String, dynamic>>();;
+            // print(restrosProviderModel.items);
+            setState(() {});
+          } else {
+            throw Exception('Failed to fetch restaurants');
+          }
+        } else {
+          throw Exception('Failed to connect to the API');
+        }
+      }
+      fetchRestaurants(locationProviderModel.latitude, locationProviderModel.longitude);
+
+      /// filters for SearchBar
+      void _runFilter(String searchText){
+        print("SEARCHBAR CHANGED: $searchText");
+        if(searchText.isEmpty){
+          restrosProviderModel.items = restrosProviderModel.itemsCopy;
+        }
+        else{
+          var temp = restrosProviderModel.itemsCopy.where((restro) => restro["name"].toLowerCase().contains(searchText.toLowerCase())).toList(); 
+          print(temp);
+
+          // Convert each map in the items list to Map<String, String>
+          // restrosProviderModel.items = temp.map((map) => map.map((key, value) =>
+                  // MapEntry<String, String>(key, value.toString()))).toList();
+          
+          setState(() {});
+          print(restrosProviderModel.items);
+        }
+      }
+
+
         
       return Container(
         padding: const EdgeInsets.fromLTRB(20, 50, 20, 0),
@@ -49,15 +104,26 @@ class _HomeScreenState extends State<HomeScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               //:/  LOCATION SECTION
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Container(
-                    margin: const EdgeInsets.only(right: 8),
-                    child: const Icon(Icons.location_on),
+              GestureDetector(
+                onTap: (){
+                  print("TAPPED");
+                  // getCurrentLocation();
+                  locationProviderModel.getCurrentLocation();
+                  setState(() {});
+                },
+                child: Container(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        margin: const EdgeInsets.only(right: 8),
+                        child: const Icon(Icons.location_on),
+                      ),
+                      // Text("${locationProviderModel.latitude.toStringAsFixed(2)}, ${locationProviderModel.longitude.toStringAsFixed(2)}", style: TextStyle(fontSize: 16)),
+                      Text("${locationProviderModel.locationName}", style: TextStyle(fontSize: 16)),
+                    ],
                   ),
-                  Text("${locationProviderModel.latitude}, ${locationProviderModel.longitude}", style: TextStyle(fontSize: 16)),
-                ],
+                ),
               ),
 
               const SizedBox(height: 10),
@@ -87,10 +153,12 @@ class _HomeScreenState extends State<HomeScreen> {
                 borderRadius: const BorderRadius.all(Radius.circular(36)),
                 child: Container(
                   child: TextField(
+                    onChanged: (value) => _runFilter(value),
+                    controller: searchController,
                     decoration: InputDecoration(
                       prefixIcon:
                           Icon(Icons.search, color: Colors.blueGrey.shade900),
-                      hintText: 'Search Food Items',
+                      hintText: 'Search restaurants:',
                       hintStyle: TextStyle(
                         color: Colors.blueGrey.shade300,
                         fontWeight: FontWeight.w100,
@@ -111,7 +179,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: ListView.builder(
                   scrollDirection: Axis.horizontal,
                   itemBuilder: (ctx, ind) => CategoryChip(
-                    activeCategory: activeCategory,
                     currCategory: categoriesList[ind],
                   ),
                   itemCount: categoriesList.length,

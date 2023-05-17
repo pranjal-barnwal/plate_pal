@@ -36,7 +36,7 @@ class _SplashScreenState extends State<SplashScreen> {
         builder: (context, restrosProviderModel, locationProviderModel, child) {
       // Call the async functions one after another using Future.then
       Future<void> fetchRestaurants(double lat, double lng) async {
-        locationProviderModel.fetchLocation();
+        locationProviderModel.getCurrentLocation();
         
         final url = Uri.parse(
             'https://theoptimiz.com/restro/public/api/get_resturants');
@@ -53,21 +53,8 @@ class _SplashScreenState extends State<SplashScreen> {
           // print(jsonData);
 
           if(jsonData['status'] == 'SUCCESS') {
-            print(jsonData['data']);
-            // List<dynamic> convertedData = jsonData['data'].values.toList();
-            // List<Map<String, String>> convertedData = jsonData.map((map) {
-            //   return map.map((key, value) => MapEntry(key, value.toString()));
-            // }).toList();
-            
-            restrosProviderModel.items = jsonData['data'];
-            restrosProviderModel.fetchRestros(jsonData['data']);
-            setState(() {});
-            // print("DATA:");
+            restrosProviderModel.items = jsonData['data'].cast<Map<String, dynamic>>();;
             // print(restrosProviderModel.items);
-            // Navigator.pushReplacement(
-            //   context,
-            //   MaterialPageRoute(builder: (context) => CompleteLayout()),
-            // );
           } else {
             throw Exception('Failed to fetch restaurants');
           }
