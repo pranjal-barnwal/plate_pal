@@ -1,6 +1,9 @@
 # **Plate Pal**
 
 ![mockup](https://github.com/pranjal-barnwal/plate_pal/assets/71400605/14c0dc23-9a7b-44e3-b9f9-b77abe11bd1a)
+<div align="center">
+    <img alt="Demo" src="https://github.com/pranjal-barnwal/plate_pal/assets/71400605/14c0dc23-9a7b-44e3-b9f9-b77abe11bd1a" />
+</div>
 
 <div align="center">
 
