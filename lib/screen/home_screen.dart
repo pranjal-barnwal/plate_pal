@@ -72,10 +72,6 @@ class _HomeScreenState extends State<HomeScreen> {
           var temp = restrosProviderModel.itemsCopy.where((restro) => restro["name"].toLowerCase().contains(searchText.toLowerCase())).toList(); 
           print(temp);
 
-          // Convert each map in the items list to Map<String, String>
-          // restrosProviderModel.items = temp.map((map) => map.map((key, value) =>
-                  // MapEntry<String, String>(key, value.toString()))).toList();
-          
           setState(() {});
           print(restrosProviderModel.items);
         }
